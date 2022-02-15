@@ -19,5 +19,8 @@ galaxy_info:
     - name: Fedora
       versions:
         - 35
+    - name: Devuan
+      versions:
+        - 3
   galaxy_tags:
     - system

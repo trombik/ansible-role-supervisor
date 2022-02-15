@@ -60,6 +60,14 @@ platforms:
       extra_vars:
         ansible_python_interpreter: '/usr/bin/python3'
 
+  - name: devuan-3-amd64
+    driver:
+      box: trombik/ansible-devuan-3-amd64
+      box_version: 20211005
+    provisioner:
+      extra_vars:
+        ansible_python_interpreter: '/usr/bin/python3'
+
 suites:
   - name: default
     provisioner:

@@ -4,7 +4,7 @@ require "serverspec"
 package = case os[:family]
           when "freebsd"
             "sysutils/py-supervisor"
-          when "openbsd", "ubuntu", "fedora"
+          when "openbsd", "ubuntu", "fedora", "devuan"
             "supervisor"
           else
             raise "unknown os[:family]: `#{os[:family]}`"
@@ -12,7 +12,7 @@ package = case os[:family]
 service = case os[:family]
           when "freebsd", "openbsd", "fedora"
             "supervisord"
-          when "ubuntu"
+          when "ubuntu", "devuan"
             "supervisor"
           end
 config_dir = case os[:family]
@@ -43,7 +43,7 @@ log_file = "/var/log/supervisor/supervisord.log"
 unix_socket_dir = case os[:family]
                   when "freebsd", "openbsd"
                     "/var/run/supervisor"
-                  when "ubuntu"
+                  when "ubuntu", "devuan"
                     "/var/run"
                   when "fedora"
                     "/run/supervisor"
@@ -54,7 +54,7 @@ pid_dir = case os[:family]
             "/var/run/supervisor"
           when "fedora"
             "/run"
-          when "ubuntu"
+          when "ubuntu", "devuan"
             "/var/run"
           end
 
