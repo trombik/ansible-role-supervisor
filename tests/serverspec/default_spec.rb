@@ -4,24 +4,31 @@ require "serverspec"
 package = case os[:family]
           when "freebsd"
             "sysutils/py-supervisor"
-          when "openbsd", "ubuntu"
+          when "openbsd", "ubuntu", "fedora"
             "supervisor"
           else
             raise "unknown os[:family]: `#{os[:family]}`"
           end
 service = case os[:family]
-          when "freebsd", "openbsd"
+          when "freebsd", "openbsd", "fedora"
             "supervisord"
-          else
+          when "ubuntu"
             "supervisor"
           end
 config_dir = case os[:family]
              when "freebsd"
                "/usr/local/etc/supervisor"
+             when "fedora"
+               "/etc"
              else
                "/etc/supervisor"
              end
-conf_d_dir = "#{config_dir}/conf.d"
+conf_d_dir = case os[:family]
+             when "fedora"
+               "#{config_dir}/supervisord.d"
+             else
+               "#{config_dir}/conf.d"
+             end
 config  = "#{config_dir}/supervisord.conf"
 user    = "root"
 group   = case os[:family]
@@ -38,11 +45,15 @@ unix_socket_dir = case os[:family]
                     "/var/run/supervisor"
                   when "ubuntu"
                     "/var/run"
+                  when "fedora"
+                    "/run/supervisor"
                   end
 unix_socket_file = "#{unix_socket_dir}/supervisor.sock"
 pid_dir = case os[:family]
           when "freebsd", "openbsd"
             "/var/run/supervisor"
+          when "fedora"
+            "/run"
           when "ubuntu"
             "/var/run"
           end
@@ -54,9 +65,11 @@ end
 describe file config_dir do
   it { should exist }
   it { should be_directory }
-  it { should be_owned_by user }
-  it { should be_grouped_into group }
-  it { should be_mode 755 }
+  if config_dir != "/etc"
+    it { should be_owned_by user }
+    it { should be_grouped_into group }
+    it { should be_mode 755 }
+  end
 end
 
 describe file conf_d_dir do
@@ -78,7 +91,7 @@ end
 describe file pid_dir do
   it { should exist }
   it { should be_directory }
-  if pid_dir != "/var/run"
+  if pid_dir != "/var/run" && pid_dir != "/run"
     it { should be_owned_by user }
     it { should be_grouped_into group }
     it { should be_mode 755 }
@@ -88,7 +101,7 @@ end
 describe file unix_socket_dir do
   it { should exist }
   it { should be_directory }
-  if unix_socket_dir != "/var/run"
+  if unix_socket_dir != "/var/run" && unix_socket_dir != "/run"
     it { should be_owned_by user }
     it { should be_grouped_into group }
     it { should be_mode 755 }
