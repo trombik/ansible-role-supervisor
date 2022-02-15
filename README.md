@@ -1,5 +1,7 @@
 # ansible-role-supervisor
 
+[![kitchen](https://github.com/trombik/ansible-role-supervisor/actions/workflows/kitchen.yml/badge.svg)](https://github.com/trombik/ansible-role-supervisor/actions/workflows/kitchen.yml)
+
 A brief description of the role goes here.
 
 # Requirements
