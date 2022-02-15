@@ -15,5 +15,6 @@ supervisor_unix_socket_file: "{{ supervisor_unix_socket_dir }}/supervisor.sock"
 supervisor_pid_dir: "{{ __supervisor_pid_dir }}"
 supervisor_pid_file: "{{ supervisor_pid_dir }}/supervisord.pid"
 supervisor_flags: ""
+supervisor_restart_handler_sleep: 5
 
 # supervisord.pid  supervisor.sock
