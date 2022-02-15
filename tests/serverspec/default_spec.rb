@@ -4,7 +4,7 @@ require "serverspec"
 package = case os[:family]
           when "freebsd"
             "sysutils/py-supervisor"
-          when "openbsd"
+          when "openbsd", "ubuntu"
             "supervisor"
           else
             raise "unknown os[:family]: `#{os[:family]}`"
@@ -12,6 +12,8 @@ package = case os[:family]
 service = case os[:family]
           when "freebsd", "openbsd"
             "supervisord"
+          else
+            "supervisor"
           end
 config_dir = case os[:family]
              when "freebsd"
@@ -34,11 +36,15 @@ log_file = "/var/log/supervisor/supervisord.log"
 unix_socket_dir = case os[:family]
                   when "freebsd", "openbsd"
                     "/var/run/supervisor"
+                  when "ubuntu"
+                    "/var/run"
                   end
 unix_socket_file = "#{unix_socket_dir}/supervisor.sock"
 pid_dir = case os[:family]
           when "freebsd", "openbsd"
             "/var/run/supervisor"
+          when "ubuntu"
+            "/var/run"
           end
 
 describe package(package) do
@@ -72,17 +78,21 @@ end
 describe file pid_dir do
   it { should exist }
   it { should be_directory }
-  it { should be_owned_by user }
-  it { should be_grouped_into group }
-  it { should be_mode 755 }
+  if pid_dir != "/var/run"
+    it { should be_owned_by user }
+    it { should be_grouped_into group }
+    it { should be_mode 755 }
+  end
 end
 
 describe file unix_socket_dir do
   it { should exist }
   it { should be_directory }
-  it { should be_owned_by user }
-  it { should be_grouped_into group }
-  it { should be_mode 755 }
+  if unix_socket_dir != "/var/run"
+    it { should be_owned_by user }
+    it { should be_grouped_into group }
+    it { should be_mode 755 }
+  end
 end
 
 describe file unix_socket_file do
@@ -145,4 +155,10 @@ ports.each do |p|
   describe port(p) do
     it { should be_listening }
   end
+end
+
+describe command "supervisorctl -c #{config} pid" do
+  its(:exit_status) { should eq 0 }
+  its(:stderr) { should eq "" }
+  its(:stdout) { should match(/\d+/) }
 end

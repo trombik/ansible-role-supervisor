@@ -30,6 +30,8 @@
     owner: "{{ supervisor_user }}"
     group: "{{ supervisor_group }}"
     state: directory
+  when:
+    - supervisor_unix_socket_dir != '/var/run'
 
 - name: Create supervisor_log_dir
   ansible.builtin.file:
@@ -56,6 +58,8 @@
     group: "{{ supervisor_group }}"
     state: directory
   notify: Restart supervisor
+  when:
+    - supervisor_pid_dir != '/var/run'
 
 - name: Create supervisord.conf
   template:
