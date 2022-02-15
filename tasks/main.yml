@@ -67,5 +67,4 @@
 - name: Start supervisor
   service:
     name: "{{ supervisor_service }}"
-    enabled: true
     state: started

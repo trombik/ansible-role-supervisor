@@ -4,11 +4,13 @@ require "serverspec"
 package = case os[:family]
           when "freebsd"
             "sysutils/py-supervisor"
+          when "openbsd"
+            "supervisor"
           else
             raise "unknown os[:family]: `#{os[:family]}`"
           end
 service = case os[:family]
-          when "freebsd"
+          when "freebsd", "openbsd"
             "supervisord"
           end
 config_dir = case os[:family]
@@ -28,13 +30,14 @@ group   = case os[:family]
           end
 ports   = []
 log_dir = "/var/log/supervisor"
+log_file = "/var/log/supervisor/supervisord.log"
 unix_socket_dir = case os[:family]
-                  when "freebsd"
+                  when "freebsd", "openbsd"
                     "/var/run/supervisor"
                   end
 unix_socket_file = "#{unix_socket_dir}/supervisor.sock"
 pid_dir = case os[:family]
-          when "freebsd"
+          when "freebsd", "openbsd"
             "/var/run/supervisor"
           end
 
@@ -109,12 +112,26 @@ when "freebsd"
     it { should be_mode 644 }
     its(:content) { should match Regexp.escape("Managed by ansible") }
   end
+when "openbsd"
+  describe file "/etc/rc.conf.local" do
+    it { should exist }
+    it { should be_file }
+    its(:content) { should match(/supervisord_flags=-c #{config}/) }
+  end
 end
 
 describe file log_dir do
   it { should exist }
   it { should be_directory }
   it { should be_mode 755 }
+  it { should be_owned_by user }
+  it { should be_grouped_into group }
+end
+
+describe file log_file do
+  it { should exist }
+  it { should be_file }
+  it { should be_mode 644 }
   it { should be_owned_by user }
   it { should be_grouped_into group }
 end

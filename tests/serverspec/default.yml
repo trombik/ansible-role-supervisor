@@ -5,6 +5,7 @@
     - ansible-role-supervisor
   vars:
     os_supervisor_flags:
+      OpenBSD: "-c {{ supervisor_conf_file }}"
       FreeBSD: |
         supervisord_config="{{ supervisor_conf_file }}"
         supervisord_user="{{ supervisor_user }}"
