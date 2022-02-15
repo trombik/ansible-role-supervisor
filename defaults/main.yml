@@ -1,0 +1,9 @@
+---
+supervisor_user: supervisor
+supervisor_group: supervisor
+supervisor_log_dir: /var/log/supervisor
+supervisor_db_dir: "{{ __supervisor_db_dir }}"
+supervisor_service: supervisor
+supervisor_conf_dir: "{{ __supervisor_conf_dir }}"
+supervisor_conf_file: "{{ __supervisor_conf_dir }}/supervisor.conf"
+supervisor_flags: ""

@@ -1,0 +1,37 @@
+---
+# tasks file for ansible-role-supervisor
+
+- include_vars: "{{ ansible_os_family }}.yml"
+
+- include: "install-{{ ansible_os_family }}.yml"
+
+- name: Create log directory
+  file:
+    path: "{{ supervisor_log_dir }}"
+    mode: 0755
+    owner: "{{ supervisor_user }}"
+    group: "{{ supervisor_group }}"
+    state: directory
+  notify: Restart supervisor
+
+- name: Create db directory
+  file:
+    path: "{{ supervisor_db_dir }}"
+    mode: 0755
+    owner: "{{ supervisor_user }}"
+    group: "{{ supervisor_group }}"
+    state: directory
+  notify: Restart supervisor
+
+- name: Create supervisor.conf
+  template:
+    src: supervisor.conf.j2
+    dest: "{{ supervisor_conf_file }}"
+    validate: echo %s
+  notify: Restart supervisor
+
+- name: Start supervisor
+  service:
+    name: "{{ supervisor_service }}"
+    enabled: true
+    state: started

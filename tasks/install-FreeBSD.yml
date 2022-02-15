@@ -1,0 +1,6 @@
+---
+
+- name: Install supervisor
+  pkgng:
+    name: supervisor
+    state: present

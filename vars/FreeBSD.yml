@@ -1,0 +1,3 @@
+---
+__supervisor_db_dir: /var/db/supervisor
+__supervisor_conf_dir: /usr/local/etc/supervisor
