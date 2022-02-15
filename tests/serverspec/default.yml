@@ -10,7 +10,7 @@
         supervisord_config="{{ supervisor_conf_file }}"
         supervisord_user="{{ supervisor_user }}"
     # "
-    supervisor_flags: "{{ os_supervisor_flags[ansible_os_family] }}"
+    supervisor_flags: "{{ os_supervisor_flags[ansible_os_family] | default('') }}"
     supervisor_config: |
       [unix_http_server]
       file={{ supervisor_unix_socket_file }}
