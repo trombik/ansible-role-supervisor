@@ -28,6 +28,7 @@ See [requirements.yml](requirements.yml).
 | `supervisor_pid_dir` | Path to PID file directory | `{{ __supervisor_pid_dir }}` |
 | `supervisor_pid_file` | Path to PID file | `{{ supervisor_pid_dir }}/supervisord.pid` |
 | `supervisor_flags` | Flags to pass `supervisord` | `""` |
+| `supervisor_restart_handler_sleep` | sleep between `stop` and `start` in restart handler | `5` |
 
 ## Debian
 
