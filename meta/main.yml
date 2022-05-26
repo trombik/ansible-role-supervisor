@@ -22,5 +22,8 @@ galaxy_info:
     - name: Devuan
       versions:
         - 3
+    - name: Debian
+      versions:
+        - bullseye
   galaxy_tags:
     - system
