@@ -1,3 +1,7 @@
+## Release 1.1.0
+
+* 4ac5b8e feat: support Debian 11
+
 ## Release 1.0.2
 
 * 52333d4 ci: update kitchen workflow
