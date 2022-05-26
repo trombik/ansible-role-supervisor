@@ -69,6 +69,13 @@ platforms:
       extra_vars:
         ansible_python_interpreter: '/usr/bin/python3'
 
+  - name: debian-11-amd64
+    driver:
+      box: trombik/ansible-debian-11-amd64
+    provisioner:
+      extra_vars:
+        ansible_python_interpreter: '/usr/bin/python3'
+
 suites:
   - name: default
     provisioner:
